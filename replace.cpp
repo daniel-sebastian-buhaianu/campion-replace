@@ -3,14 +3,16 @@
 #define NMAX 11
 #define LGMAX_SIR 81
 #define LGMAX_TXT 256
-#define LGMAX_TSF 30001
+#define LGMAX_AUX 30001
 using namespace std;
 ifstream fin("replace.in");
 ofstream fout("replace.out");
 int main()
 {
 	int n, i;
-	char f[NMAX][LGMAX_SIR], r[NMAX][LGMAX_SIR], t[LGMAX_TXT], c, *p, q[LGMAX_TSF];
+	char f[NMAX][LGMAX_SIR], r[NMAX][LGMAX_SIR];
+	char t[LGMAX_TXT], aux[LGMAX_AUX], *p, q[LGMAX_AUX];
+	char c;
 	fin >> n;
 	fin.get(c);
 	for (i = 0; i < n; i++)
@@ -28,9 +30,10 @@ int main()
 	}
 	fin.getline(t, LGMAX_TXT);
 	fin.close();
+	strcpy(aux, t);
 	for (i = 0; i < n; i++)
 	{
-		p = t;
+		p = aux;
 		do
 		{
 			p = strstr(p, f[i]);
@@ -38,14 +41,15 @@ int main()
 			{
 				*p = 0;
 				strcpy(q, p+strlen(f[i]));
-				strcat(t, r[i]);
-				p = t+strlen(t);
-				strcat(t, q);
+				strcat(aux, r[i]);
+				p = aux+strlen(aux);
+				strcat(aux, q);
 			}
 		} while (p);
 	}
+	strcpy(t, aux);
 	fout << t;
 	fout.close();
 	return 0;
 }
-// scor 22
+// scor 44
