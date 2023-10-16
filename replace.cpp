@@ -2,54 +2,60 @@
 #include <cstring>
 #define NMAX 11
 #define LGMAX_SIR 81
-#define LGMAX_TXT 256
-#define LGMAX_AUX 30001
+#define LGMAX_TXT 30001
 using namespace std;
 ifstream fin("replace.in");
 ofstream fout("replace.out");
+struct regula
+{
+	char f[LGMAX_SIR], r[LGMAX_SIR];
+};
+void citesteDateIntrare(int &, regula [], char []);
+void aplicaRegula(int, regula [], char []);
+void afiseazaRezultat(char []);
 int main()
 {
 	int n, i;
-	char f[NMAX][LGMAX_SIR], r[NMAX][LGMAX_SIR];
-	char t[LGMAX_TXT], aux[LGMAX_AUX], *p, q[LGMAX_AUX];
-	char c;
-	fin >> n;
-	fin.get(c);
+	regula R[NMAX];
+	char t[LGMAX_TXT];
+	citesteDateIntrare(n, R, t);
 	for (i = 0; i < n; i++)
 	{
-		fin.getline(f[i], LGMAX_SIR);
-		if (strlen(f[i]) < 1)
+		aplicaRegula(i, R, t);
+	}
+	afiseazaRezultat(t);
+	return 0;
+}
+void citesteDateIntrare(int & n, regula R[NMAX], char t[LGMAX_TXT])
+{
+	fin >> n; fin.get();
+	for (int i = 0; i < n; i++)
+	{
+		fin.getline(R[i].f, LGMAX_SIR);
+		if (strlen(R[i].f) < 1)
 		{
-			strcpy(f[i], " ");
+			strcpy(R[i].f, " ");
 		}
-		fin.getline(r[i], LGMAX_SIR);
-		if (strlen(r[i]) < 1)
-		{
-			strcpy(r[i], " ");
-		}
+		fin.getline(R[i].r, LGMAX_SIR);
 	}
 	fin.getline(t, LGMAX_TXT);
 	fin.close();
-	strcpy(aux, t);
-	for (i = 0; i < n; i++)
+}
+void aplicaRegula(int i, regula R[NMAX], char t[LGMAX_TXT])
+{
+	int lgf = strlen(R[i].f);
+	while (char *p = strstr(t, R[i].f))
 	{
-		p = aux;
-		do
-		{
-			p = strstr(p, f[i]);
-			if (p)
-			{
-				*p = 0;
-				strcpy(q, p+strlen(f[i]));
-				strcat(aux, r[i]);
-				p = aux+strlen(aux);
-				strcat(aux, q);
-			}
-		} while (p);
+		char aux[LGMAX_TXT];
+		strcpy(aux, p+lgf);
+		*p = 0;
+		strcat(t, R[i].r);
+		strcat(t, aux);
 	}
-	strcpy(t, aux);
+}
+void afiseazaRezultat(char t[LGMAX_TXT])
+{
 	fout << t;
 	fout.close();
-	return 0;
 }
-// scor 44
+// scor 100
